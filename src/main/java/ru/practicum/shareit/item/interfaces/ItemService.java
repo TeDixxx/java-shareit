@@ -2,9 +2,6 @@ package ru.practicum.shareit.item.interfaces;
 
 import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
-
 import java.util.Collection;
 
 public interface ItemService {

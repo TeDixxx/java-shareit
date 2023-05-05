@@ -7,7 +7,6 @@ import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.interfaces.UserService;
 
-import javax.validation.Valid;
 import java.util.Collection;
 
 /**
