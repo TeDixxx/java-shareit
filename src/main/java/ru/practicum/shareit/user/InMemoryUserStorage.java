@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
 
 @Slf4j
 @Component("inMemoryUserStorage")
@@ -56,7 +57,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     public void checkDuplicateEmail(User user) throws ValidationException {
         for (User values : getAllUsers()) {
-            if (user.getEmail().equals(values.getEmail()) && user.getId() != values.getId()) {
+            if (user.getEmail().equals(values.getEmail()) && !Objects.equals(user.getId(), values.getId())) {
                 throw new ValidationException("Duplicate email");
             }
         }
