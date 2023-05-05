@@ -10,9 +10,9 @@ import java.util.Collection;
 @Service
 public interface UserService {
 
-    UserDto create(UserDto userDto) throws ValidationException;
+    UserDto create(UserDto userDto);
 
-    UserDto update(UserDto userDto, Long userId) throws ValidationException;
+    UserDto update(UserDto userDto, Long userId);
 
     void remove(Long userId);
 

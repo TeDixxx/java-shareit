@@ -23,12 +23,12 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto create(@RequestBody @Validated UserDto userDto) throws ValidationException {
+    public UserDto create(@RequestBody @Validated UserDto userDto) {
         return userService.create(userDto);
     }
 
     @PatchMapping("/{id}")
-    public UserDto update(@RequestBody  UserDto userDto, @PathVariable("id") Long id) throws ValidationException {
+    public UserDto update(@RequestBody  UserDto userDto, @PathVariable("id") Long id) {
         return userService.update(userDto, id);
     }
 

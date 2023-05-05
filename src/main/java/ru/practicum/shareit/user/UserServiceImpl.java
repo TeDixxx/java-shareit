@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(UserDto userDto) throws ValidationException {
+    public UserDto create(UserDto userDto) {
         User newUser = userStorage.create(UserMapper.fromUserDto(userDto));
         return UserMapper.toUserDto(newUser);
     }
 
     @Override
-    public UserDto update(UserDto userDto, Long userId) throws ValidationException {
+    public UserDto update(UserDto userDto, Long userId) {
         User user = userStorage.getUserById(userId);
 
         if (userDto.getEmail() == null) {
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long userId) throws UserNotFoundException {
+    public UserDto getUserById(Long userId) {
         return UserMapper.toUserDto(userStorage.getUserById(userId));
     }
 

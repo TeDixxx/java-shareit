@@ -19,7 +19,7 @@ public class InMemoryUserStorage implements UserStorage {
     private Long currentId = 1L;
 
     @Override
-    public User create(User user) throws ValidationException {
+    public User create(User user) {
         checkDuplicateEmail(user);
         user.setId(currentId++);
         users.put(user.getId(), user);
@@ -27,7 +27,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User update(User user) throws ValidationException {
+    public User update(User user) {
         checkDuplicateEmail(user);
         users.put(user.getId(), user);
         return user;
@@ -55,7 +55,7 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
-    public void checkDuplicateEmail(User user) throws ValidationException {
+    public void checkDuplicateEmail(User user) {
         for (User values : getAllUsers()) {
             if (user.getEmail().equals(values.getEmail()) && !Objects.equals(user.getId(), values.getId())) {
                 throw new ValidationException("Duplicate email");

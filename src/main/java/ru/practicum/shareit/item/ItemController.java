@@ -3,8 +3,6 @@ package ru.practicum.shareit.item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.UserNotFoundException;
-import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.interfaces.ItemService;
 
@@ -25,13 +23,13 @@ public class ItemController {
 
     @PostMapping
     public ItemDto add(@RequestBody @Validated ItemDto itemDto,
-                       @RequestHeader("X-Sharer-User-Id") Long userId) throws UserNotFoundException, ValidationException {
+                       @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.add(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long userId,
-                          @PathVariable Long itemId) throws ValidationException {
+                          @PathVariable Long itemId) {
         return itemService.update(itemDto, userId, itemId);
     }
 
@@ -46,7 +44,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> search(@RequestParam String text) throws ValidationException {
+    public Collection<ItemDto> search(@RequestParam String text) {
         return itemService.search(text);
     }
 

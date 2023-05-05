@@ -30,7 +30,7 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public Item update(Item item) throws ItemNotFoundException {
+    public Item update(Item item) {
         return items.put(item.getId(), item);
     }
 

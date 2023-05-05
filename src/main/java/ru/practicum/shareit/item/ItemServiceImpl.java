@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
-import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.interfaces.ItemService;
@@ -30,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto add(ItemDto itemDto, Long userId) throws ValidationException, UserNotFoundException {
+    public ItemDto add(ItemDto itemDto, Long userId) {
         UserDto userDto = userService.getUserById(userId);
 
         User user = UserMapper.fromUserDto(userDto);
@@ -40,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto update(ItemDto itemDto, Long userId, Long itemId) throws ValidationException {
+    public ItemDto update(ItemDto itemDto, Long userId, Long itemId) {
         User user = UserMapper.fromUserDto(userService.getUserById(userId));
         Item item = itemStorage.getItemById(itemId);
 
@@ -85,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> search(String text) throws ValidationException {
+    public Collection<ItemDto> search(String text) {
         Collection<Item> items = itemStorage.search(text);
         Collection<ItemDto> itemsDto = new ArrayList<>();
 
