@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.interfaces;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 
