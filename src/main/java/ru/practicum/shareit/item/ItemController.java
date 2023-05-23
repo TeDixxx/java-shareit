@@ -3,8 +3,11 @@ package ru.practicum.shareit.item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.interfaces.ItemService;
+
+import javax.validation.Valid;
 
 import java.util.Collection;
 
@@ -14,12 +17,8 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemService itemService;
-
     @Autowired
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
+    private ItemService itemService;
 
     @PostMapping
     public ItemDto add(@RequestBody @Validated ItemDto itemDto,
@@ -34,13 +33,13 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable Long itemId) {
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return itemService.getItemById(itemId,userId);
     }
 
     @GetMapping
     public Collection<ItemDto> getOwnerItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getOwnerItems(userId);
+        return itemService.getItemsByOwnerId(userId);
     }
 
     @GetMapping("/search")
@@ -48,5 +47,10 @@ public class ItemController {
         return itemService.search(text);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId,
+                                    @RequestBody @Valid CommentDto commentDto) {
+        return itemService.createComment(itemId, userId, commentDto);
+    }
 
 }
