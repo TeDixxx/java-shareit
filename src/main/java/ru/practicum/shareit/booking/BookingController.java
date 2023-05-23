@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.InputBookingDto;
+import ru.practicum.shareit.booking.dto.DateBookingDto;
 import ru.practicum.shareit.booking.interfaces.BookingService;
 
 import java.util.Collection;
@@ -23,9 +23,9 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingDto create(@RequestBody InputBookingDto inputBookingDto,
+    public BookingDto create(@RequestBody DateBookingDto dateBookingDto,
                              @RequestHeader("X-Sharer-User-Id") Long bookerId) {
-        return bookingService.create(inputBookingDto,bookerId);
+        return bookingService.create(dateBookingDto,bookerId);
     }
 
     @PatchMapping("/{bookingId}")

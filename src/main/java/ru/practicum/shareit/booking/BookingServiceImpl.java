@@ -42,9 +42,9 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
 
     @Override
-    public BookingDto create(InputBookingDto inputBookingDto, Long bookerId) {
+    public BookingDto create(DateBookingDto dateBookingDto, Long bookerId) {
 
-        Item item = itemService.get(inputBookingDto.getItemId());
+        Item item = itemService.get(dateBookingDto.getItemId());
 
         if (!item.getAvailable()) {
             throw new UnAvailableException("Item not available");
@@ -54,20 +54,20 @@ public class BookingServiceImpl implements BookingService {
             throw new UserNotFoundException("owner can't booking his item");
         }
 
-        Booking booking = bookingMapper.toBooking(inputBookingDto,bookerId);
+        Booking booking = bookingMapper.toBooking(dateBookingDto, bookerId);
 
-        if (inputBookingDto.getStart() == null) {
+        if (dateBookingDto.getStart() == null) {
             throw new IncorrectDataException("error");
         }
 
-        if (inputBookingDto.getEnd() == null) {
+        if (dateBookingDto.getEnd() == null) {
             throw new IncorrectDataException("error");
         }
 
-        if (inputBookingDto.getStart().isBefore(LocalDateTime.now())
-                || inputBookingDto.getEnd().isBefore(LocalDateTime.now())
-                || inputBookingDto.getEnd().isBefore(inputBookingDto.getStart())
-                || inputBookingDto.getStart().equals(inputBookingDto.getEnd())) {
+        if (dateBookingDto.getStart().isBefore(LocalDateTime.now())
+                || dateBookingDto.getEnd().isBefore(LocalDateTime.now())
+                || dateBookingDto.getEnd().isBefore(dateBookingDto.getStart())
+                || dateBookingDto.getStart().equals(dateBookingDto.getEnd())) {
             throw new IncorrectDataException("Incorrect time for booking");
         }
 
@@ -195,13 +195,13 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toShortBookingDto(bookingRepository.findAllByItemId(itemId)
                 .stream()
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .max(Comparator.comparing(Booking ::getStart)).orElse(null));
+                .max(Comparator.comparing(Booking::getStart)).orElse(null));
     }
 
     @Override
     public Booking getItemWithBooker(Long itemId, Long userID) {
         return bookingRepository.findFirstByItem_IdAndBookerIdAndEndIsBeforeAndStatus(itemId, userID,
-                LocalDateTime.now(),Status.APPROVED);
+                LocalDateTime.now(), Status.APPROVED);
     }
 
     @Override
@@ -214,13 +214,13 @@ public class BookingServiceImpl implements BookingService {
         } else {
             end = lastBooking.getEnd();
         }
-        return bookingMapper.toShortBookingDto(bookingRepository.findFirstByItem_IdAndStatusAndStartAfterOrderByStartAsc(itemId,Status.APPROVED,end).orElse(null));
+        return bookingMapper.toShortBookingDto(bookingRepository.findFirstByItem_IdAndStatusAndStartAfterOrderByStartAsc(itemId, Status.APPROVED, end).orElse(null));
     }
 
     private void check(Long userId) {
-       if(userService.get(userId) == null) {
-          throw new UserNotFoundException("User not found");
-       }
+        if (userService.get(userId) == null) {
+            throw new UserNotFoundException("User not found");
+        }
     }
 
 }

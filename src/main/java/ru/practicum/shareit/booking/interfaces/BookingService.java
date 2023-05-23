@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.interfaces;
 
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.InputBookingDto;
+import ru.practicum.shareit.booking.dto.DateBookingDto;
 import ru.practicum.shareit.booking.dto.ShortBookingDto;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Collection;
 public interface BookingService {
 
     // Добавление нового запроса
-    BookingDto create(InputBookingDto inputBookingDto, Long bookerId);
+    BookingDto create(DateBookingDto dateBookingDto, Long bookerId);
 
     // Подтверждение или отклонение щапроса бронирования
     BookingDto toAccept(Long bookingId, Long ownerId, boolean approve);

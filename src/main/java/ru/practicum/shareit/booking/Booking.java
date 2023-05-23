@@ -33,7 +33,7 @@ public class Booking {
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "booker_id" , referencedColumnName = "id")
+    @JoinColumn(name = "booker_id", referencedColumnName = "id")
     private User booker;
 
     @Enumerated(EnumType.STRING)

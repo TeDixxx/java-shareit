@@ -49,11 +49,11 @@ public class BookingMapper {
 
     }
 
-    public Booking toBooking(InputBookingDto inputBookingDto, Long bookerId) {
+    public Booking toBooking(DateBookingDto dateBookingDto, Long bookerId) {
         return new Booking(null,
-                inputBookingDto.getStart(),
-                inputBookingDto.getEnd(),
-                itemService.get(inputBookingDto.getItemId()),
+                dateBookingDto.getStart(),
+                dateBookingDto.getEnd(),
+                itemService.get(dateBookingDto.getItemId()),
                 userService.get(bookerId),
                 Status.WAITING);
     }
