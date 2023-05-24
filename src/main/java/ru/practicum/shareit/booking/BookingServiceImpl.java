@@ -12,8 +12,8 @@ import ru.practicum.shareit.booking.dto.*;
 import ru.practicum.shareit.booking.interfaces.BookingRepository;
 import ru.practicum.shareit.booking.interfaces.BookingService;
 import ru.practicum.shareit.exceptions.*;
-import ru.practicum.shareit.item.interfaces.ItemService;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.interfaces.ItemService;
+import ru.practicum.shareit.user.item.model.Item;
 import ru.practicum.shareit.user.interfaces.UserService;
 
 
@@ -55,14 +55,6 @@ public class BookingServiceImpl implements BookingService {
         }
 
         Booking booking = bookingMapper.toBooking(dateBookingDto, bookerId);
-
-        if (dateBookingDto.getStart() == null) {
-            throw new IncorrectDataException("error");
-        }
-
-        if (dateBookingDto.getEnd() == null) {
-            throw new IncorrectDataException("error");
-        }
 
         if (dateBookingDto.getStart().isBefore(LocalDateTime.now())
                 || dateBookingDto.getEnd().isBefore(LocalDateTime.now())

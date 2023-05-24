@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.interfaces;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.dto.Status;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
+@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "SELECT b FROM Booking AS b " +

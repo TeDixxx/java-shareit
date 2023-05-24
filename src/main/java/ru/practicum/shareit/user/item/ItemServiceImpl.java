@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.user.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -9,16 +9,19 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.interfaces.BookingService;
 import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
-import ru.practicum.shareit.item.dto.*;
-
-import ru.practicum.shareit.item.interfaces.CommentRepository;
-import ru.practicum.shareit.item.interfaces.ItemRepository;
-import ru.practicum.shareit.item.interfaces.ItemService;
 
 
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.interfaces.CommentRepository;
+import ru.practicum.shareit.user.item.interfaces.ItemRepository;
+import ru.practicum.shareit.user.item.interfaces.ItemService;
+
+
+import ru.practicum.shareit.user.item.model.Comment;
+import ru.practicum.shareit.user.item.model.Item;
 import ru.practicum.shareit.user.interfaces.UserRepository;
+import ru.practicum.shareit.user.item.dto.CommentDto;
+import ru.practicum.shareit.user.item.dto.ItemDto;
+import ru.practicum.shareit.user.item.dto.ItemMapper;
 import ru.practicum.shareit.user.model.User;
 
 
@@ -39,6 +42,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
+
 
     @Autowired
     private UserRepository userRepository;

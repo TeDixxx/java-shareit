@@ -1,12 +1,12 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.item.dto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.interfaces.BookingService;
-import ru.practicum.shareit.item.interfaces.ItemService;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.interfaces.ItemService;
+import ru.practicum.shareit.user.item.model.Comment;
+import ru.practicum.shareit.user.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 @Component

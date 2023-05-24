@@ -1,11 +1,11 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.user.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.interfaces.ItemService;
+import ru.practicum.shareit.user.item.dto.CommentDto;
+import ru.practicum.shareit.user.item.dto.ItemDto;
+import ru.practicum.shareit.user.item.interfaces.ItemService;
 
 import javax.validation.Valid;
 

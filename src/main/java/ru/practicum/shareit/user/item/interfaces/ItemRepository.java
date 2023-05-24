@@ -1,9 +1,9 @@
-package ru.practicum.shareit.item.interfaces;
+package ru.practicum.shareit.user.item.interfaces;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.model.Item;
 
 import java.util.Collection;
 

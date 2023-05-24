@@ -1,6 +1,6 @@
-package ru.practicum.shareit.item.interfaces;
+package ru.practicum.shareit.user.item.interfaces;
 
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;

@@ -1,10 +1,10 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.user.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.item.model.Item;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
