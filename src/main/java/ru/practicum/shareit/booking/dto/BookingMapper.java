@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.user.item.dto.ItemMapper;
-import ru.practicum.shareit.user.item.interfaces.ItemService;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.interfaces.ItemService;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.interfaces.UserService;
+import ru.practicum.shareit.user.model.User;
 
 
 @Component
@@ -23,12 +25,12 @@ public class BookingMapper {
     @Lazy
     private ItemMapper itemMapper;
 
-    public BookingDto toBookingDto(Booking booking) {
+    public static BookingDto toBookingDto(Booking booking) {
         if (booking != null) {
             return new BookingDto(booking.getId(),
                     booking.getStart(),
                     booking.getEnd(),
-                    itemMapper.toItemDto(booking.getItem()),
+                    booking.getItem(),
                     UserMapper.toUserDto(booking.getBooker()),
                     booking.getStatus());
         } else {
@@ -37,7 +39,7 @@ public class BookingMapper {
     }
 
 
-    public ShortBookingDto toShortBookingDto(Booking booking) {
+    public static ShortBookingDto toShortBookingDto(Booking booking) {
         if (booking != null) {
             return new ShortBookingDto(booking.getId(),
                     booking.getBooker().getId(),
@@ -49,12 +51,12 @@ public class BookingMapper {
 
     }
 
-    public Booking toBooking(DateBookingDto dateBookingDto, Long bookerId) {
+    public static Booking toBooking(DateBookingDto dateBookingDto, Item item, User user) {
         return new Booking(null,
                 dateBookingDto.getStart(),
                 dateBookingDto.getEnd(),
-                itemService.get(dateBookingDto.getItemId()),
-                userService.get(bookerId),
+                item,
+                user,
                 Status.WAITING);
     }
 }
