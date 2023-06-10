@@ -1,34 +1,38 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.interfaces.UserRepository;
 import ru.practicum.shareit.user.interfaces.UserService;
-import ru.practicum.shareit.user.interfaces.UserStorage;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(@Qualifier("inMemoryUserStorage") UserStorage userStorage) {
-        this.userStorage = userStorage;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDto create(UserDto userDto) {
-        User newUser = userStorage.create(UserMapper.fromUserDto(userDto));
-        return UserMapper.toUserDto(newUser);
+        return UserMapper.toUserDto(userRepository.save(UserMapper.fromUserDto(userDto)));
     }
 
     @Override
     public UserDto update(UserDto userDto, Long userId) {
-        User user = userStorage.getUserById(userId);
+
+        userDto.setId(userId);
+
+        User user = userRepository.findById(userDto.getId()).orElseThrow(()
+                -> new UserNotFoundException("User not found!"));
 
         if (userDto.getEmail() == null) {
             userDto.setEmail(user.getEmail());
@@ -38,34 +42,31 @@ public class UserServiceImpl implements UserService {
             userDto.setName(user.getName());
         }
 
-        userDto.setId(userId);
-
-        userStorage.update(UserMapper.fromUserDto(userDto));
-
-
-        return userDto;
+        return UserMapper.toUserDto(userRepository.save(UserMapper.fromUserDto(userDto)));
     }
 
     @Override
     public void remove(Long userId) {
-        User user = userStorage.getUserById(userId);
-        userStorage.remove(user.getId());
+        userRepository.deleteById(userId);
     }
 
     @Override
     public UserDto getUserById(Long userId) {
-        return UserMapper.toUserDto(userStorage.getUserById(userId));
+        return UserMapper.toUserDto(userRepository.findById(userId).orElseThrow(()
+                -> new UserNotFoundException("Пользователь не найден")));
     }
 
     @Override
     public Collection<UserDto> getAllUsers() {
-        Collection<User> users = userStorage.getAllUsers();
-        Collection<UserDto> usersDto = new ArrayList<>();
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
+    }
 
-        for (User user : users) {
-            usersDto.add(UserMapper.toUserDto(user));
-        }
-        return usersDto;
+    @Override
+    public User get(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Not found"));
     }
 
 
