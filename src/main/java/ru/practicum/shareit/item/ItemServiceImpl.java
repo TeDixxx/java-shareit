@@ -133,7 +133,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(Long itemId, Long userId, CommentDto commentDto) {
         Comment comment = new Comment();
-        Booking booking = bookingService.getItemWithBooker(itemId, userId);
+        Booking booking = bookingService.getBookedItemWithBooker(itemId, userId);
 
         if (booking != null) {
             comment.setItem(booking.getItem());

@@ -1,10 +1,8 @@
 package ru.practicum.shareit.booking;
 
-
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,10 +13,10 @@ import ru.practicum.shareit.booking.interfaces.BookingRepository;
 import ru.practicum.shareit.booking.interfaces.BookingService;
 import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.interfaces.ItemRepository;
-import ru.practicum.shareit.item.interfaces.ItemService;
+
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.interfaces.UserRepository;
-import ru.practicum.shareit.user.interfaces.UserService;
+
 import ru.practicum.shareit.user.model.User;
 
 
@@ -36,26 +34,14 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private final BookingRepository bookingRepository;
 
-//    @Autowired
-//    private final ItemService itemService;
-
     @Autowired
     private final ItemRepository itemRepository;
 
     @Autowired
     private final UserRepository userRepository;
 
-//    @Autowired
-//    @Lazy
-//    public final UserService userService;
-
-//    @Autowired
-//    private final BookingMapper bookingMapper;
-
     @Override
     public BookingDto create(DateBookingDto dateBookingDto, Long bookerId) {
-
-      //  Item item = itemService.get(dateBookingDto.getItemId());
 
         Item item = itemRepository.findById(dateBookingDto.getItemId()).orElseThrow(()
                 -> new ItemNotFoundException("item not found"));
@@ -122,18 +108,18 @@ public class BookingServiceImpl implements BookingService {
         check(bookerId);
 
         if (from < 0 || size < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect params");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        PageRequest page = PageRequest.of(from == 0 ? 0 : (from/size), size);
+        PageRequest page = PageRequest.of(from == 0 ? 0 : (from / size), size);
 
         switch (state) {
             case "WAITING":
-                bookings = bookingRepository.findByBooker_IdAndStatusOrderByStartDesc(bookerId, Status.WAITING, page); // ???
+                bookings = bookingRepository.findByBooker_IdAndStatusOrderByStartDesc(bookerId, Status.WAITING, page);
                 break;
 
             case "REJECTED":
-                bookings = bookingRepository.findByBooker_IdAndStatusOrderByStartDesc(bookerId, Status.REJECTED, page); // ???
+                bookings = bookingRepository.findByBooker_IdAndStatusOrderByStartDesc(bookerId, Status.REJECTED, page);
                 break;
 
             case "ALL":
@@ -169,7 +155,7 @@ public class BookingServiceImpl implements BookingService {
         check(ownerID);
 
         if (from < 0 || size < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect params");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         PageRequest page = PageRequest.of(from, size);
@@ -220,7 +206,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking getItemWithBooker(Long itemId, Long userID) {
+    public Booking getBookedItemWithBooker(Long itemId, Long userID) {
         return bookingRepository.findFirstByItem_IdAndBookerIdAndEndIsBeforeAndStatus(itemId, userID,
                 LocalDateTime.now(), Status.APPROVED);
     }

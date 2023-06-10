@@ -29,37 +29,37 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long id, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     //future
-    List<Booking> findByBooker_IdAndStartAfterOrderByStartDesc(Long id, LocalDateTime now , Pageable pageable); //???
+    List<Booking> findByBooker_IdAndStartAfterOrderByStartDesc(Long id, LocalDateTime now, Pageable pageable); //???
 
     //past
-    List<Booking> findByBooker_IdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime now , Pageable pageable);
+    List<Booking> findByBooker_IdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime now, Pageable pageable);
 
     //waiting
-    List<Booking> findByBooker_IdAndStatusOrderByStartDesc(Long id, Status status , Pageable pageable);
+    List<Booking> findByBooker_IdAndStatusOrderByStartDesc(Long id, Status status, Pageable pageable);
 
 
     //----- get by owner id
 
     //current
     List<Booking> findByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long id, LocalDateTime start,
-                                                                                     LocalDateTime end , Pageable pageable);
+                                                                               LocalDateTime end, Pageable pageable);
 
     //past
-    List<Booking> findByItem_Owner_IdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime now , Pageable pageable);
+    List<Booking> findByItem_Owner_IdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime now, Pageable pageable);
 
     //future
-    List<Booking> findByItem_Owner_IdAndStartAfterOrderByStartDesc(Long id, LocalDateTime now , Pageable pageable);
+    List<Booking> findByItem_Owner_IdAndStartAfterOrderByStartDesc(Long id, LocalDateTime now, Pageable pageable);
 
     //rejected
-    List<Booking> findByItem_Owner_IdAndStatusOrderByStartDesc(Long id, Status status , Pageable pageable); //???
+    List<Booking> findByItem_Owner_IdAndStatusOrderByStartDesc(Long id, Status status, Pageable pageable); //???
 
     //All
-    List<Booking> findByItem_Owner_IdOrderByStartDesc(Long id , Pageable pageable);
+    List<Booking> findByItem_Owner_IdOrderByStartDesc(Long id, Pageable pageable);
 
 
     Collection<Booking> findAllByItemId(Long itemId);
 
     Optional<Booking> findFirstByItem_IdAndStatusAndStartAfterOrderByStartAsc(Long itemId, Status status, LocalDateTime now);
 
-    Booking findFirstByItem_IdAndBookerIdAndEndIsBeforeAndStatus(Long itemId,Long userId, LocalDateTime now, Status status);
+    Booking findFirstByItem_IdAndBookerIdAndEndIsBeforeAndStatus(Long itemId, Long userId, LocalDateTime now, Status status);
 }

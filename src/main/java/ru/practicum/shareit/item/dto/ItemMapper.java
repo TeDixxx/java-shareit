@@ -51,17 +51,6 @@ public class ItemMapper {
                 comment.getCreated());
     }
 
-    public ItemDto toItemDtoWithBooking(Item item) {
-        return new ItemDto(item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getOwner(),
-                bookingService.getLastBooking(item.getId()),
-                bookingService.getNextBooking(item.getId()),
-                itemService.getCommentsByItemId(item.getId()));
-    }
-
     public  ItemDto toItemDtoWithBookingToOwner(Item item) {
         return new ItemDto(item.getId(),
                 item.getName(),

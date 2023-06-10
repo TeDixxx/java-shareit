@@ -5,7 +5,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.DateBookingDto;
 import ru.practicum.shareit.booking.dto.ShortBookingDto;
 
-import java.util.Collection;
 import java.util.List;
 
 
@@ -30,5 +29,5 @@ public interface BookingService {
 
     ShortBookingDto getLastBooking(Long itemId);
 
-    Booking getItemWithBooker(Long itemId, Long userID);
+    Booking getBookedItemWithBooker(Long itemId, Long userID);
 }

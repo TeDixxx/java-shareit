@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService {
@@ -80,8 +82,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<Item> items = itemRepository.findAllByRequest_IdIn(ids);
 
         for (ItemRequestDto itemRequestDto : itemRequestDtoList) {
-            List<Item> values = items.stream().
-                    filter(item -> item.getRequest().getId()
+            List<Item> values = items.stream()
+                    .filter(item -> item.getRequest().getId()
                             .equals(itemRequestDto.getId())).collect(Collectors.toList());
 
             if (!values.isEmpty()) {
@@ -93,13 +95,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             }
         }
         return itemRequestDtoList;
+
     }
 
     @Override
     public List<ItemRequestDto> getAll(Long userId, int from, int size) {
 
         if (from < 0 || size < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect params");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new UserNotFoundException("User not found"));
@@ -127,6 +130,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             }
         }
         return itemRequestDtoList;
+
     }
 
     @Override
@@ -142,7 +146,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         List<ItemDto> itemDtoList = items.stream()
                 .map(itemMapper::toItemDto)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         itemRequestDto.setItems(itemDtoList);
 

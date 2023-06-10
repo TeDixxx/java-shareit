@@ -2,171 +2,221 @@ package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.DateBookingDto;
-import ru.practicum.shareit.booking.dto.ShortBookingDto;
-import ru.practicum.shareit.booking.interfaces.BookingRepository;
-import ru.practicum.shareit.exceptions.ItemNotFoundException;
+import ru.practicum.shareit.booking.interfaces.BookingService;
+
+
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.interfaces.CommentRepository;
-import ru.practicum.shareit.item.interfaces.ItemRepository;
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.interfaces.ItemService;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestMapper;
-import ru.practicum.shareit.request.interfaces.ItemRequestRepository;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.interfaces.UserRepository;
+import ru.practicum.shareit.user.interfaces.UserService;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
-@MockitoSettings(strictness = Strictness.LENIENT)
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ItemServiceTest {
 
-    @Mock
-    ItemRepository itemRepository;
-    @Mock
-    ItemMapper itemMapper;
+    @Autowired
+    @Lazy
+    private ItemService itemService;
 
-    @Mock
-    UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
-    @Mock
-    CommentRepository commentRepository;
+    @Autowired
+    private BookingService bookingService;
 
-    @Mock
-    BookingRepository bookingRepository;
+    @Autowired
+    private ItemMapper itemMapper;
 
-    @Mock
-    ItemRequestRepository itemRequestRepository;
+    User user;
+    UserDto userDto;
+    UserDto userDto2;
 
-    @InjectMocks
-    ItemServiceImpl itemService;
-
-    Item item = new Item();
-    ItemDto itemDto = new ItemDto();
-
-    User user = new User();
-    UserDto userDto = new UserDto();
-
-    Booking booking = new Booking();
-    DateBookingDto dateBookingDto = new DateBookingDto();
-
-    Comment comment = new Comment();
-    CommentDto commentDto = new CommentDto();
-
-    ItemRequest itemRequest = new ItemRequest();
-    ItemRequestDto itemRequestDto = new ItemRequestDto();
+    ItemDto spear;
+    ItemDto axe;
+    Item item;
 
 
     @BeforeEach
     void create() {
+        user = User.builder()
+                .id(1L)
+                .name("Dmitry")
+                .email("xxx@mail.ru")
+                .build();
 
-        userDto.setId(1L);
-        userDto.setName("Vladimir");
-        userDto.setEmail("myemail@mail.ru");
+        userDto = UserDto.builder()
+                .id(2L)
+                .name("Alex")
+                .email("email@mail.ru")
+                .build();
 
-        user = UserMapper.fromUserDto(userDto);
+        userDto2 = UserDto.builder()
+                .id(3L)
+                .name("Pedro")
+                .email("aaa@mail.ru")
+                .build();
 
-        itemDto.setId(1L);
-        itemDto.setName("itemDto");
-        itemDto.setDescription("description");
-        itemDto.setAvailable(true);
-        itemDto.setRequestId(1L);
-        itemDto.setOwner(user);
+        spear = ItemDto.builder()
+                .id(1L)
+                .name("spear")
+                .description("divine spear")
+                .available(true)
+                .owner(user)
+                .build();
 
-        item = itemMapper.fromItemDto(itemDto, user);
+        axe = ItemDto.builder()
+                .id(2L)
+                .name("axe")
+                .description("axe is GOD!")
+                .available(true)
+                .owner(user)
+                .build();
 
-        dateBookingDto.setItemId(item.getId());
-        dateBookingDto.setStart(LocalDateTime.now());
-        dateBookingDto.setEnd(LocalDateTime.now().plusDays(1));
-
-        booking = BookingMapper.toBooking(dateBookingDto, item, user);
-
-        comment.setId(1L);
-        comment.setText("text");
-        comment.setItem(item);
-        comment.setAuthor(user);
-        comment.setCreated(LocalDateTime.now());
-
-        commentDto = itemMapper.toCommentDto(comment);
-
-        itemRequestDto.setId(1L);
-        itemRequestDto.setDescription("description");
-        itemRequestDto.setCreated(LocalDateTime.now());
-        itemRequestDto.setItems(List.of(itemDto));
-
-        itemRequest = ItemRequestMapper.fromItemRequestDto(itemRequestDto, user);
+        item = Item.builder()
+                .id(7L)
+                .name("null")
+                .description("descr")
+                .owner(user)
+                .available(true)
+                .build();
 
     }
 
     @Test
     void shouldCreateItem() {
-        Mockito
+        UserDto testUser = userService.create(userDto);
+        ItemDto testItem = itemService.add(spear, testUser.getId());
+        ItemDto testItem2 = itemService.getItemById(testItem.getId(), testUser.getId());
 
-                .when(userRepository.findById(user.getId()))
-                .thenReturn(Optional.of(user));
+        assertEquals(testItem2.getId(), spear.getId());
+        assertEquals(testItem.getDescription(), spear.getDescription());
+        assertEquals(testItem.getName(), spear.getName());
 
-        assertThrows(UserNotFoundException.class, () -> itemService.add(itemDto, 2L));
+        spear.setAvailable(null);
 
-        Mockito
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, ()
+                -> itemService.add(spear, testUser.getId()));
 
-                .when(itemRequestRepository.findById(1L))
-                .thenReturn(Optional.of(itemRequest));
-
-        Mockito.when(itemRepository.save(Mockito.any()))
-                .thenReturn(item);
-
-        itemDto.setRequestId(2L);
-
-     assertThrows(NullPointerException.class, () -> itemService.add(itemDto, userDto.getId()));
-
-     itemDto.setRequestId(1L);
-
-     ItemDto result = itemService.add(itemDto, userDto.getId());
-
-     assertNotNull(result);
+        assertEquals("400 BAD_REQUEST", exception.getMessage());
 
     }
 
     @Test
     void shouldGetItemById() {
+        UserDto owner = userService.create(userDto);
+
+        ItemDto itemDto = itemService.add(axe, owner.getId());
+
+        assertEquals("axe", itemService.getItemById(itemDto.getId(), owner.getId()).getName());
+        assertEquals("axe is GOD!", itemService.getItemById(itemDto.getId(), owner.getId()).getDescription());
+        assertEquals(true, itemService.getItemById(itemDto.getId(), owner.getId()).getAvailable());
     }
 
     @Test
     void shouldUpdateItem() {
+        UserDto owner = userService.create(userDto2);
+        ItemDto itemDto = itemService.add(spear, owner.getId());
+
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, ()
+                -> itemService.update(itemDto, 60L, itemDto.getId()));
+        assertEquals("Only owner can change item!", exception.getMessage());
+
+
+        ItemDto itemForUp = itemService.update(itemDto, owner.getId(), itemDto.getId());
+
+        assertEquals("spear", itemForUp.getName());
+        assertEquals("divine spear", itemForUp.getDescription());
+        assertEquals(true, itemForUp.getAvailable());
     }
 
     @Test
     void shouldGetItemByOwnerId() {
+        UserDto owner = userService.create(userDto2);
+        ItemDto itemDto = itemService.add(spear, owner.getId());
+        ItemDto itemDto2 = itemService.add(axe, owner.getId());
+
+        Collection<ItemDto> ownerItems = itemService.getItemsByOwnerId(owner.getId());
+
+        assertEquals(2, ownerItems.size());
     }
 
     @Test
     void shouldFindItemByText() {
+        UserDto owner = userService.create(userDto2);
+        ItemDto itemDto = itemService.add(axe, owner.getId());
+
+        Collection<ItemDto> searchItems = itemService.search("axe");
+
+        assertEquals(1, searchItems.size());
     }
 
     @Test
     void shouldCreateComment() {
+        UserDto owner = userService.create(userDto2);
+        UserDto commentator = userService.create(userDto);
+
+        ItemDto itemDto = itemService.add(spear, owner.getId());
+
+        DateBookingDto dateBookingDto;
+        dateBookingDto = DateBookingDto.builder()
+                .itemId(itemDto.getId())
+                .start(LocalDateTime.now().plusSeconds(1))
+                .end(LocalDateTime.now().plusSeconds(3))
+                .build();
+
+        BookingDto bookingDto = bookingService.create(dateBookingDto, commentator.getId());
+        bookingService.toAccept(bookingDto.getId(), owner.getId(), true);
+
+        try {
+            sleep(5000);
+        } catch (InterruptedException runtimeException) {
+            throw new RuntimeException(runtimeException);
+        }
+
+        CommentDto commentDto;
+        commentDto = CommentDto.builder()
+                .id(1L)
+                .text("really divine spear!")
+                .item(itemMapper.fromItemDto(itemDto, UserMapper.fromUserDto(owner)))
+                .authorName(commentator.getName())
+                .created(LocalDateTime.now())
+                .build();
+
+        itemService.createComment(itemDto.getId(), commentator.getId(), commentDto);
+
+        assertEquals(1, itemService.getCommentsByItemId(itemDto.getId()).size());
+    }
+
+    @Test
+    void shouldGet() {
+        userService.create(UserMapper.toUserDto(user));
+        assertEquals(itemService.get(itemService.add(itemMapper.toItemDto(item), user.getId()).getId()).getId(), 1);
     }
 
 
