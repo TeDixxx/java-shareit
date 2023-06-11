@@ -192,24 +192,4 @@ public class BookingServiceTest {
         assertEquals("400 BAD_REQUEST", exception.getMessage());
     }
 
-
-    @Test
-    void shouldGetLastBooking() {
-    }
-
-    @Test
-    void shouldGetNextBooking() {
-    }
-
-    @Test
-    void shouldGetBookedItemWithBooker() {
-
-    }
-
-    @Test
-    void testShortBooking() {
-
-    }
-
-
 }
