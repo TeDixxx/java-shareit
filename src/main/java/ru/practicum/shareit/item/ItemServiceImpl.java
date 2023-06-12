@@ -11,6 +11,7 @@ import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 
 
+import ru.practicum.shareit.item.dto.CommentMapper;
 import ru.practicum.shareit.item.interfaces.ItemRepository;
 import ru.practicum.shareit.item.interfaces.CommentRepository;
 
@@ -144,7 +145,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking not found");
         }
 
-        return itemMapper.toCommentDto(commentRepository.save(comment));
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 
     @Override
@@ -156,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
     public List<CommentDto> getCommentsByItemId(Long itemId) {
         return commentRepository.findAllByItemId(itemId)
                 .stream()
-                .map(itemMapper::toCommentDto).collect(toList());
+                .map(CommentMapper::toCommentDto).collect(toList());
     }
 
 

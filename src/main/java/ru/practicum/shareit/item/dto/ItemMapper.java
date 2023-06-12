@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.interfaces.BookingService;
 import ru.practicum.shareit.item.interfaces.ItemService;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
@@ -43,13 +42,6 @@ public class ItemMapper {
                 itemDto.getRequestId() == null ? null : ItemRequest.builder().id(itemDto.getRequestId()).build());
     }
 
-    public CommentDto toCommentDto(Comment comment) {
-        return new CommentDto(comment.getId(),
-                comment.getText(),
-                comment.getItem(),
-                comment.getAuthor().getName(),
-                comment.getCreated());
-    }
 
     public  ItemDto toItemDtoWithBookingToOwner(Item item) {
         return new ItemDto(item.getId(),
