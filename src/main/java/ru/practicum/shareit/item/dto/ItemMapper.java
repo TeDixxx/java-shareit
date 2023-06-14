@@ -1,12 +1,12 @@
-package ru.practicum.shareit.user.item.dto;
+package ru.practicum.shareit.item.dto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.interfaces.BookingService;
-import ru.practicum.shareit.user.item.interfaces.ItemService;
-import ru.practicum.shareit.user.item.model.Comment;
-import ru.practicum.shareit.user.item.model.Item;
+import ru.practicum.shareit.item.interfaces.ItemService;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 @Component
@@ -28,7 +28,8 @@ public class ItemMapper {
                 item.getOwner(),
                 null,
                 null,
-                itemService.getCommentsByItemId(item.getId()));
+                itemService.getCommentsByItemId(item.getId()),
+                item.getRequest() == null ? null : item.getRequest().getId());
 
     }
 
@@ -37,18 +38,12 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                owner);
+                owner,
+                itemDto.getRequestId() == null ? null : ItemRequest.builder().id(itemDto.getRequestId()).build());
     }
 
-    public CommentDto toCommentDto(Comment comment) {
-        return new CommentDto(comment.getId(),
-                comment.getText(),
-                comment.getItem(),
-                comment.getAuthor().getName(),
-                comment.getCreated());
-    }
 
-    public ItemDto toItemDtoWithBooking(Item item) {
+    public  ItemDto toItemDtoWithBookingToOwner(Item item) {
         return new ItemDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
@@ -58,6 +53,7 @@ public class ItemMapper {
                 bookingService.getNextBooking(item.getId()),
                 itemService.getCommentsByItemId(item.getId()));
     }
+
 
 
 }

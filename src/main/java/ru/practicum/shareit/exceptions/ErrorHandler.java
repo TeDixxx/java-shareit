@@ -2,7 +2,6 @@ package ru.practicum.shareit.exceptions;
 
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,7 +18,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleIncorrectDataException(final  IncorrectDataException e) {
+    public Map<String, String> handleIncorrectDataException(final IncorrectDataException e) {
         return Map.of("Incorrect data", e.getMessage());
     }
 
@@ -31,13 +30,13 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleUnAvailableException(final  UnAvailableException e) {
+    public Map<String, String> handleUnAvailableException(final UnAvailableException e) {
         return Map.of("Unavailable error", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleBookingNotFoundException(final  BookingNotFoundException e) {
+    public Map<String, String> handleBookingNotFoundException(final BookingNotFoundException e) {
         return Map.of("Booking not found", e.getMessage());
     }
 
@@ -48,9 +47,9 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidException(final MethodArgumentNotValidException e) {
-        return Map.of("Unavailable error", e.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleItemRequestNotFoundException(final ItemRequestNotFoundException e) {
+        return Map.of("Request not found!", e.getMessage());
     }
 
 }

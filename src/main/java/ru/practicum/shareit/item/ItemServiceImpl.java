@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.item;
+package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -11,17 +11,19 @@ import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 
 
-import ru.practicum.shareit.user.item.interfaces.CommentRepository;
-import ru.practicum.shareit.user.item.interfaces.ItemRepository;
-import ru.practicum.shareit.user.item.interfaces.ItemService;
+import ru.practicum.shareit.item.dto.CommentMapper;
+import ru.practicum.shareit.item.interfaces.ItemRepository;
+import ru.practicum.shareit.item.interfaces.CommentRepository;
+
+import ru.practicum.shareit.item.interfaces.ItemService;
 
 
-import ru.practicum.shareit.user.item.model.Comment;
-import ru.practicum.shareit.user.item.model.Item;
+import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.interfaces.UserRepository;
-import ru.practicum.shareit.user.item.dto.CommentDto;
-import ru.practicum.shareit.user.item.dto.ItemDto;
-import ru.practicum.shareit.user.item.dto.ItemMapper;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.user.model.User;
 
 
@@ -104,7 +106,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Item not found"));
 
         if (userId.equals(item.getOwner().getId())) {
-            itemDto = itemMapper.toItemDtoWithBooking(item);
+            itemDto = itemMapper.toItemDtoWithBookingToOwner(item);
         } else {
             itemDto = itemMapper.toItemDto(item);
         }
@@ -115,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDto> getItemsByOwnerId(Long ownerId) {
         return itemRepository.getItemsByOwnerId(ownerId)
                 .stream()
-                .map(itemMapper::toItemDtoWithBooking)
+                .map(itemMapper::toItemDtoWithBookingToOwner)
                 .sorted(Comparator.comparing(ItemDto::getId)).collect(toList());
     }
 
@@ -132,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(Long itemId, Long userId, CommentDto commentDto) {
         Comment comment = new Comment();
-        Booking booking = bookingService.getItemWithBooker(itemId, userId);
+        Booking booking = bookingService.getBookedItemWithBooker(itemId, userId);
 
         if (booking != null) {
             comment.setItem(booking.getItem());
@@ -143,7 +145,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Booking not found");
         }
 
-        return itemMapper.toCommentDto(commentRepository.save(comment));
+        return CommentMapper.toCommentDto(commentRepository.save(comment));
     }
 
     @Override
@@ -155,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
     public List<CommentDto> getCommentsByItemId(Long itemId) {
         return commentRepository.findAllByItemId(itemId)
                 .stream()
-                .map(itemMapper::toCommentDto).collect(toList());
+                .map(CommentMapper::toCommentDto).collect(toList());
     }
 
 
